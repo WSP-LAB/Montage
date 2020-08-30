@@ -11,39 +11,54 @@ from utils import read
 from utils import write
 from utils.logger import print_msg
 
-def const_log_path(js_path, log_dir):
-  log_name = os.path.basename(js_path)
-  log_name = log_name.split('.')[0]
-  return os.path.join(log_dir, log_name)
+class Executor:
+  def __init__(self, conf):
+    self._conf = conf
 
-def execute(proc, log_path, timeout):
-  timer = threading.Timer(timeout,
-                          lambda p: kill_proc(p), [proc])
-  timer.start()
-  stdout, stderr = proc.communicate()
-  ret = proc.returncode
+  def const_log_path(self, js_path, log_dir):
+    log_name = os.path.basename(js_path)
+    log_name = log_name.split('.')[0]
+    return os.path.join(log_dir, log_name)
 
-  write_log(log_path, stdout, stderr, ret)
-  timer.cancel()
+  def execute(self, proc, log_path, timeout):
+    def kill_proc(proc):
+      if proc.poll() is None:
+        proc.kill()
+
+    timer = threading.Timer(timeout,
+                            lambda p: kill_proc(p), [proc])
+    timer.start()
+    stdout, stderr = proc.communicate()
+    ret = proc.returncode
+
+    self.write_log(log_path, stdout, stderr, ret)
+    timer.cancel()
+
+  def run(self, js_path, cwd):
+    cmd = [self._conf.eng_path]
+    cmd += self._conf.opt
+    cmd += [js_path]
+    proc = Popen(cmd, cwd=cwd, stdout=PIPE, stderr=PIPE)
+    log_path = self.const_log_path(js_path,
+                                   self._conf.log_dir)
+    self.execute(proc, log_path, self._conf.timeout)
+
+  def write_log(self, log_path, stdout, stderr, ret):
+    log = b'\n============== STDOUT ===============\n'
+    log += stdout
+    log += b'\n============== STDERR ===============\n'
+    log += stderr
+    log += b'\nMONTAGE_RETURN: %d' % (ret)
+    write(log_path, log)
 
 def exec_chakra(js_path, conf):
   tmp_js_path = rewrite_file(js_path, conf.data_dir)
+
+  executor = Executor(conf)
   cwd = os.path.dirname(js_path)
-  exec_main(tmp_js_path, cwd, conf)
+  executor.run(tmp_js_path, cwd)
+
   os.remove(tmp_js_path)
-
-def exec_main(js_path, cwd, conf):
-  cmd = [conf.eng_path]
-  cmd += conf.opt
-  cmd += [js_path]
-  proc = Popen(cmd, cwd=cwd, stdout=PIPE, stderr=PIPE)
-
-  log_path = const_log_path(js_path, conf.log_dir)
-  execute(proc, log_path, conf.timeout)
-
-def kill_proc(proc):
-  if proc.poll() is None:
-    proc.kill()
 
 def main(pool, conf):
   make_dir(conf.log_dir)
@@ -75,11 +90,3 @@ def rewrite_file(js_path, tmp_dir):
   write(tmp_js_path, code)
 
   return tmp_js_path
-
-def write_log(log_path, stdout, stderr, ret):
-  log = b'\n============== STDOUT ===============\n'
-  log += stdout
-  log += b'\n============== STDERR ===============\n'
-  log += stderr
-  log += b'\nMONTAGE_RETURN: %d' % (ret)
-  write(log_path, log)
