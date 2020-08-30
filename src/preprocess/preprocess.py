@@ -76,11 +76,11 @@ class Preprocessor:
     self.write_data()
 
   def write_data(self):
-    data_path = os.path.join(self._conf.tmp_dir,
+    data_path = os.path.join(self._conf.data_dir,
                                 'data.p')
-    train_data_path = os.path.join(self._conf.tmp_dir,
+    train_data_path = os.path.join(self._conf.data_dir,
                                     'train_data.p')
-    seed_data_path = os.path.join(self._conf.tmp_dir,
+    seed_data_path = os.path.join(self._conf.data_dir,
                                   'seed.p')
 
     # Write a seed file

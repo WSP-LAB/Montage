@@ -22,7 +22,7 @@ from utils.parse import SingleParser
 class Stripper:
   def __init__(self, conf):
     self._ast_dir = conf.ast_dir
-    self._tmp_dir = conf.tmp_dir
+    self._data_dir = conf.data_dir
 
   def append(self, child, subtree, idx):
     return child[:idx] + subtree + child[idx+1:]
@@ -50,7 +50,7 @@ class Stripper:
       return False
 
   def parse_arg(self, code, parser):
-    tmp_dir = make_tmp_dir(self._tmp_dir)
+    tmp_dir = make_tmp_dir(self._data_dir)
     js_path = hash_val(code) + '.js'
     js_path = os.path.join(tmp_dir, js_path)
     write(js_path, code)

@@ -10,7 +10,7 @@ from utils.logger import print_msg
 class Parser:
   def __init__(self, conf):
     self._ast_dir = conf.ast_dir
-    self._seed_dir = os.path.join(conf.tmp_dir, 'seed')
+    self._seed_dir = os.path.join(conf.data_dir, 'seed')
     make_dir(self._ast_dir)
 
   def parse(self):

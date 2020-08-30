@@ -1,9 +1,9 @@
 {
+  "data_dir": "/home/user/Montage/data",
   "eng_name": "chakra",
   "eng_path": "/home/user/ChakraCore/out/Release/ch",
   "num_proc": 80,
   "opt": [],
   "seed_dir": "/home/user/js-test-suite/testsuite",
-  "timeout": 20,
-  "tmp_dir": "/home/user/Montage/tmp"
+  "timeout": 20
 }

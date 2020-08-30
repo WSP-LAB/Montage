@@ -27,7 +27,7 @@ def execute(proc, log_path, timeout):
   timer.cancel()
 
 def exec_chakra(js_path, conf):
-  tmp_js_path = rewrite_file(js_path, conf.tmp_dir)
+  tmp_js_path = rewrite_file(js_path, conf.data_dir)
   cwd = os.path.dirname(js_path)
   exec_main(tmp_js_path, cwd, conf)
   os.remove(tmp_js_path)

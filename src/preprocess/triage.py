@@ -48,7 +48,7 @@ def main(conf):
     if ret not in ret_dict: ret_dict[ret] = []
     ret_dict[ret] += [log_path]
 
-  new_seed_dir = os.path.join(conf.tmp_dir, 'seed')
+  new_seed_dir = os.path.join(conf.data_dir, 'seed')
   make_dir(new_seed_dir)
 
   for log_path in ret_dict[0]:
