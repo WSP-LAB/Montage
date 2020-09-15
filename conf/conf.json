@@ -1,9 +1,24 @@
 {
+  "bug_dir": "/home/user/Montage/bugs/",
   "data_dir": "/home/user/Montage/data",
   "eng_name": "chakra",
   "eng_path": "/home/user/ChakraCore/out/Release/ch",
+  "max_ins": 100,
+  "model_path": "/home/user/Montage/data/models/epoch-70.model",
+  "model": {
+    "batch_size": 128,
+    "emb_size": 32,
+    "epoch": 100,
+    "gamma": 0.9,
+    "lr": 0.1,
+    "momentum": 0.9,
+    "split_size": 64,
+    "weight_decay": 0.0001
+  },
+  "num_gpu": 8,
   "num_proc": 80,
   "opt": [],
   "seed_dir": "/home/user/js-test-suite/testsuite",
-  "timeout": 20
+  "timeout": 20,
+  "top_k": 64
 }
