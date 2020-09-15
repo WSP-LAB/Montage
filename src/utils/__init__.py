@@ -3,6 +3,7 @@ import os
 import pickle
 import shutil
 import string
+import torch
 import ujson
 
 from functools import partial
@@ -12,6 +13,15 @@ from random import choice
 from utils.logger import get_msg
 from utils.logger import print_msg
 from utils.node import PROP_DICT
+
+def data2tensor(batch, tensor_type='Long'):
+  if tensor_type == 'Long':
+    batch = torch.cuda.LongTensor(batch)
+  elif tensor_type == 'Byte':
+    batch = torch.cuda.ByteTensor(batch)
+  elif tensor_type == 'Float':
+    batch = torch.cuda.FloatTensor(batch)
+  return batch
 
 def get_node_type(node):
   return node['type']
@@ -30,6 +40,10 @@ def is_node_list(node):
 def is_single_node(node):
   return (type(node) == dict and
           'type' in node)
+
+def kill_proc(proc):
+  if proc.poll() is None:
+    proc.kill()
 
 def list_dir(dir_path):
   return [os.path.join(dir_path, f) for f in os.listdir(dir_path)]

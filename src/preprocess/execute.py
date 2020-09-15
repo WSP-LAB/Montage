@@ -4,6 +4,7 @@ import threading
 from subprocess import PIPE
 from subprocess import Popen
 
+from utils import kill_proc
 from utils import list_dir
 from utils import make_dir
 from utils import pool_map
@@ -21,10 +22,6 @@ class Executor:
     return os.path.join(log_dir, log_name)
 
   def execute(self, proc, log_path, timeout):
-    def kill_proc(proc):
-      if proc.poll() is None:
-        proc.kill()
-
     timer = threading.Timer(timeout,
                             lambda p: kill_proc(p), [proc])
     timer.start()
