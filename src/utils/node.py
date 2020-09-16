@@ -104,3 +104,71 @@ TERM_TYPE = [
   'EmptyStatement',
   'Import',
 ]
+
+def get_define_node():
+  node = {
+    'type': 'IfStatement',
+    'test': {
+      'type': 'BinaryExpression',
+      'operator': '==',
+      'left': {
+        'type': 'UnaryExpression',
+        'operator': 'typeof',
+        'argument': {
+          'type': 'Identifier',
+          'name': 'load'
+        },
+        'prefix': True
+      },
+      'right': {
+        'type': 'Literal',
+        'value': 'undefined',
+        'raw': '"undefined"'
+      }
+    },
+    'consequent': {
+      'type': 'ExpressionStatement',
+      'expression': {
+        'type': 'AssignmentExpression',
+        'operator': '=',
+        'left': {
+          'type': 'Identifier',
+          'name': 'load'
+        },
+        'right': {
+          'type': 'MemberExpression',
+          'computed': False,
+          'object': {
+            'type': 'Identifier',
+            'name': 'WScript'
+          },
+          'property': {
+            'type': 'Identifier',
+            'name': 'LoadScriptFile'
+          }
+        }
+      }
+    },
+    'alternate': None
+  }
+  return node
+
+def get_load_node(script_path):
+  node = {
+    'type': 'ExpressionStatement',
+    'expression': {
+      'type': 'CallExpression',
+      'callee': {
+        'type': 'Identifier',
+        'name': 'load'
+      },
+      'arguments': [
+        {
+          'type': 'Literal',
+          'value': script_path,
+          'raw': '"' + script_path + '"'
+        }
+      ]
+    }
+  }
+  return node

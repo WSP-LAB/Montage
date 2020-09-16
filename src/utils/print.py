@@ -24,9 +24,9 @@ class CodePrinter:
     self._printer.stdin.write(ast_path)
     js_path = self._printer.stdout.readline()
     js_path = js_path.decode('utf-8').strip()
+    os.remove(ast_path.strip())
 
     if 'Error' in js_path:
-      print(js_path)
       return None
     else:
       return js_path
