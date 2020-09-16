@@ -24,7 +24,7 @@ $ sudo apt install python3 python3-pip nodejs npm
 $ npm install esprima@4.0.0 escodegen@1.9.1
 $ git clone https://github.com/WSP-LAB/Montage
 $ cd Montage
-$ pip3 install -r requirement.txt
+$ pip3 install -r requirements.txt
 ```
 ## Dataset
 
