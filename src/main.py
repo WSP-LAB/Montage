@@ -7,6 +7,7 @@ import torch
 from fuzz.fuzz import fuzz
 from preprocess.preprocess import Preprocessor
 from train.train import ModelTrainer
+from utils import handler
 from utils.config import Config
 from utils.logger import print_msg
 
@@ -27,9 +28,6 @@ def get_args():
   	  	                  required=True)
   arg_parser.add_argument('--config', required=True)
   return arg_parser.parse_args(sys.argv[1:])
-
-def handler(sigint, frame):
-  os._exit(1)
 
 def main():
   if not torch.cuda.is_available():

@@ -1,5 +1,6 @@
 import os
 import random
+import signal
 import sys
 import threading
 from copy import deepcopy
@@ -15,6 +16,7 @@ from fuzz.resolve import hoisting
 from fuzz.resolve import resolve_id
 from utils import data2tensor
 from utils import get_node_type
+from utils import handler
 from utils import hash_frag
 from utils import is_single_node
 from utils import is_node_list
@@ -387,6 +389,8 @@ def load_model(model_path):
   return model
 
 def run(proc_idx, conf):
+  # Add a SIGINT handler
+  signal.signal(signal.SIGINT, handler)
   fuzzer = Fuzzer(proc_idx, conf)
   fuzzer.fuzz()
 

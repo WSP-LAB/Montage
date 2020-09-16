@@ -26,6 +26,9 @@ def data2tensor(batch, tensor_type='Long'):
 def get_node_type(node):
   return node['type']
 
+def handler(sigint, frame):
+  os._exit(1)
+
 def hash_frag(frag):
   return hash_val(stringify_frag(frag))
 
