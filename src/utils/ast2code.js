@@ -13,19 +13,9 @@ function extract_name(ast_path){
 }
 
 function generate_code(ast_path){
-  content = read_file(ast_path);
-  if(content.startsWith('{')){
-    ast = content
-    code = ""
-  }
-  else {
-    content = content.split("\n");
-    info = content.slice(0, 4);
-    ast = content.slice(4).join("\n");
-    code = info.join("\n") + "\n"
-  }
+  ast = read_file(ast_path);
   ast = JSON.parse(ast);
-  code += escodegen.generate(ast);
+  code = escodegen.generate(ast);
   return code;
 }
 
@@ -42,15 +32,15 @@ function write_file(des_path, ast_path, code){
 
 des_path = process.argv[2];
 
-process.stdin.setEncoding("utf8");
-process.stdin.on("data", function (ast_path) {
+process.stdin.setEncoding('utf8');
+process.stdin.on('data', function (ast_path) {
   try {
       ast_path = ast_path.trim();
       code = generate_code(ast_path);
       js_path = write_file(des_path, ast_path, code);
-      process.stdout.write(js_path + "\n");
+      process.stdout.write(js_path + '\n');
   } catch (err) {
-    err = "[!] Error - " + err + "\n";
+    err = '[!] Error - ' + err + '\n';
     process.stdout.write(err);
   }
 });
