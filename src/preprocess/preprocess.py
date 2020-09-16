@@ -47,7 +47,7 @@ class Preprocessor:
                                         self._frag_dict)
     (self._new_seed_dict,
      self._new_frag_dict, self._new_frag_list,
-     self._frag_pool, self._oov_pool) = renewed_data
+     self._oov_pool) = renewed_data
 
   def preprocess(self):
     print_msg('[1/8] Filtering out JS with errors')
@@ -97,6 +97,5 @@ class Preprocessor:
 
     # Write a data file
     data = (self._new_frag_list, self._new_frag_dict,
-            self._frag_pool, self._oov_pool,
-            self._type_list, self._type_dict)
+            self._oov_pool, self._type_dict)
     store_pickle(data_path, data)

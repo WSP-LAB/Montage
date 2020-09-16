@@ -45,7 +45,7 @@ def replace_uncommon(seed_dict, frag_list, frag_dict):
   # Update frag_list & frag_dict
   ret = update_frags(sorted_frags, frag_list,
                      hash_frag_list, oov_types)
-  new_frag_list, new_frag_dict, frag_pool = ret
+  new_frag_list, new_frag_dict = ret
 
   # Update ast_frags
   new_seed_dict = update_ast(seed_dict,
@@ -55,7 +55,7 @@ def replace_uncommon(seed_dict, frag_list, frag_dict):
 
   return (new_seed_dict,
           new_frag_dict, new_frag_list,
-          frag_pool, oov_pool)
+          oov_pool)
 
 def sort_frags(seed_dict):
   all_frags = []
@@ -105,7 +105,6 @@ def update_frags(sorted_frags,
                  frag_list, hash_frag_list, oov_types):
   new_frag_list = []
   new_frag_dict = {}
-  frag_pool = {}
 
   # Append frags not in OoV
   for frag_idx in sorted_frags:
@@ -115,20 +114,14 @@ def update_frags(sorted_frags,
       frag_idx = len(new_frag_list)
       new_frag_list += [frag]
       new_frag_dict[hash_frag(frag)] = frag_idx
-      # Add frag into frag_pool
-      if frag_type not in frag_pool:
-        frag_pool[frag_type] = []
-      frag_pool[frag_type] += [frag_idx]
 
   # Append OoVs
   for oov_type in oov_types:
-    if oov_type not in frag_pool:
-      frag_pool[oov_type] = []
     frag_idx = len(new_frag_list)
     new_frag_list += [oov_type]
     new_frag_dict[oov_type] = frag_idx
 
-  return new_frag_list, new_frag_dict, frag_pool
+  return new_frag_list, new_frag_dict
 
 def update_frag_info(frag_info_seq,
                      new_frag_dict, frag_list, hash_frag_list):
