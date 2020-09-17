@@ -1,6 +1,5 @@
 import os
 import random
-import signal
 import sys
 import threading
 from copy import deepcopy
@@ -16,8 +15,8 @@ from fuzz.resolve import hoisting
 from fuzz.resolve import resolve_id
 from utils import data2tensor
 from utils import get_node_type
-from utils import handler
 from utils import hash_frag
+from utils import init_worker
 from utils import is_single_node
 from utils import is_node_list
 from utils import kill_proc
@@ -363,7 +362,7 @@ class Fuzzer:
 
 def fuzz(conf):
   set_start_method('spawn')
-  p = Pool(conf.num_proc)
+  p = Pool(conf.num_proc, init_worker)
   pool_map(p, run, range(conf.num_proc), conf=conf)
 
 def is_pruned(node):
@@ -389,8 +388,6 @@ def load_model(model_path):
   return model
 
 def run(proc_idx, conf):
-  # Add a SIGINT handler
-  signal.signal(signal.SIGINT, handler)
   fuzzer = Fuzzer(proc_idx, conf)
   fuzzer.fuzz()
 

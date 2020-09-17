@@ -1,13 +1,11 @@
 import argparse
 import os
-import signal
 import sys
 import torch
 
 from fuzz.fuzz import fuzz
 from preprocess.preprocess import Preprocessor
 from train.train import ModelTrainer
-from utils import handler
 from utils.config import Config
 from utils.logger import print_msg
 
@@ -34,9 +32,6 @@ def main():
     print_msg('Montage only supports CUDA-enabled machines',
               'ERROR')
     sys.exit(1)
-
-  # Add a SIGINT handler
-  signal.signal(signal.SIGINT, handler)
 
   # Increase max recursion depth limit
   sys.setrecursionlimit(10000)

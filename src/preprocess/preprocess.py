@@ -8,6 +8,7 @@ from preprocess import normalize
 from preprocess import oov
 from preprocess import strip
 from preprocess import triage
+from utils import init_worker
 from utils import make_dir
 from utils import store_pickle
 from utils.logger import print_msg
@@ -15,7 +16,7 @@ from utils.parse import Parser
 
 class Preprocessor:
   def __init__(self, conf):
-    self._pool = Pool(conf.num_proc)
+    self._pool = Pool(conf.num_proc, init_worker)
     self._conf = conf
 
   def remove_js_with_errors(self):

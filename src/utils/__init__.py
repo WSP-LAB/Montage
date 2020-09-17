@@ -1,7 +1,9 @@
+import atexit
 import json
 import os
 import pickle
 import shutil
+import signal
 import string
 import torch
 import ujson
@@ -26,9 +28,6 @@ def data2tensor(batch, tensor_type='Long'):
 def get_node_type(node):
   return node['type']
 
-def handler(sigint, frame):
-  os._exit(1)
-
 def hash_frag(frag):
   return hash_val(stringify_frag(frag))
 
@@ -36,6 +35,9 @@ def hash_val(text):
   if type(text) is str:
     text = text.encode('utf-8')
   return sha1(text).hexdigest()
+
+def init_worker():
+  signal.signal(signal.SIGINT, signal.SIG_IGN)
 
 def is_node_list(node):
   return type(node) == list
@@ -91,8 +93,15 @@ def make_tmp_dir(dir_path):
   return dir_path
 
 def pool_map(pool, func, list, **args):
-  func = partial(func, **args)
-  return pool.map(func, list)
+  try:
+    func = partial(func, **args)
+    return pool.map(func, list)
+  except KeyboardInterrupt:
+    print_msg('Terminating workers ...', 'INFO')
+    pool.terminate()
+    pool.join()
+    print_msg('Killed processes', 'INFO')
+    os.killpg(os.getpid(), signal.SIGKILL)
 
 def random_string(length):
   candidate = string.ascii_letters + string.digits
