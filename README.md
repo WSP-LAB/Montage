@@ -60,7 +60,12 @@ $ python3 main.py --opt train --config CONFIG_PATH
 ```
 
 ### Phase III
-We will release the code for Phase III shortly.
+Phase III produces new JS tests and logs whether they elicit bugs from JS
+engines.
+```
+$ cd Montage/src
+$ python3 main.py --opt fuzz --config CONFIG_PATH
+```
 
 ## Authors
 This research project has been conducted by [WSP Lab](https://wsp-lab.github.io)
