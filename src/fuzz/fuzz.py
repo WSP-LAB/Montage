@@ -10,7 +10,6 @@ import torch
 from torch.multiprocessing import Pool
 from torch.multiprocessing import set_start_method
 
-from fuzz.harness import Harness
 from fuzz.resolve import hoisting
 from fuzz.resolve import resolve_id
 from utils import data2tensor
@@ -22,6 +21,7 @@ from utils import is_node_list
 from utils import kill_proc
 from utils import load_pickle
 from utils import pool_map
+from utils.harness import Harness
 from utils.logger import print_msg
 from utils.node import PROP_DICT
 from utils.node import TERM_TYPE

@@ -1,15 +1,19 @@
+import os
+
 from utils import list_dir
 
 class Harness:
   def __init__(self, seed_dir):
     self._seed_dir = seed_dir
     self._harness_dict = {}
+    self.build_dict()
 
   def build_dict(self):
     js_list = list_dir(self._seed_dir)
 
     for js_path in js_list:
       with open(js_path, 'r') as f:
+        js_name = os.path.basename(js_path)
         for line in f:
           line = line.strip()
           if not self.is_load(line):
@@ -19,9 +23,9 @@ class Harness:
           if not harness.endswith('.js'):
             continue
 
-          if js_path not in self._harness_dict:
-            self._harness_dict[js_path] = []
-          self._harness_dict[js_path] += [harness]
+          if js_name not in self._harness_dict:
+            self._harness_dict[js_name] = []
+          self._harness_dict[js_name] += [harness]
 
   def get_harness(self, line):
     if line.startswith('load("'):
@@ -36,7 +40,7 @@ class Harness:
     else:
       return []
 
-  def extract_name(self, line, delimiter):
+  def extract_path(self, line, delimiter):
     line = line.split(delimiter)
     load_path = line[1]
     return os.path.basename(load_path)
