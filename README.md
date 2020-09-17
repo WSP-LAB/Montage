@@ -62,7 +62,7 @@ $ python3 main.py --opt train --config CONFIG_PATH
 ### Phase III
 Phase III produces new JS tests by leveraging the trained LSTM model and logs
 whether they elicit bugs from JS engines. Before running Phase III, you need to
-build a map for identifiers defined in the harness files.
+build a map for identifiers predefined in the harness files.
 ```
 $ cd Montage/src
 $ python3 main.py --opt build_map --config CONFIG_PATH
