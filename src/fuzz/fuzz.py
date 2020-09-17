@@ -42,7 +42,6 @@ class Fuzzer:
     self._timeout = conf.timeout
     self._top_k = conf.top_k
 
-
     self._harness = Harness(conf.seed_dir)
     if not os.path.exists(self._bug_dir):
       os.makedirs(self._bug_dir)
@@ -112,7 +111,6 @@ class Fuzzer:
             self.push(stack, frag)
             child[idx] = frag
             return None
-
     return frag
 
   def build_seed_tree(self, seed_name, frag_seq):
@@ -254,7 +252,7 @@ class Fuzzer:
     body = [get_define_node()]
 
     for jspath in harness_list:
-      load_node = get_load_node(jspath)
+      load_node = get_load_node(self._seed_dir, jspath)
       if load_node not in body:
         body.append(load_node)
 

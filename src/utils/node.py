@@ -1,3 +1,5 @@
+import os
+
 EVAL_LIST = [
   'assertAsmDirectiveFail',
   'eval',
@@ -153,7 +155,8 @@ def get_define_node():
   }
   return node
 
-def get_load_node(script_path):
+def get_load_node(seed_dir, script_path):
+  abs_path = os.path.join(seed_dir, script_path)
   node = {
     'type': 'ExpressionStatement',
     'expression': {
@@ -165,8 +168,8 @@ def get_load_node(script_path):
       'arguments': [
         {
           'type': 'Literal',
-          'value': script_path,
-          'raw': '"' + script_path + '"'
+          'value': abs_path,
+          'raw': '"' + abs_path + '"'
         }
       ]
     }
