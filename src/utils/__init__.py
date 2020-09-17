@@ -146,6 +146,12 @@ def stringify_frag(node):
       str_val += str((key, node[key]))
   return str_val
 
+def trim_seed_name(seed_name):
+  if '_aug.js' in seed_name:
+    return seed_name.replace('_aug.js', '.js')
+  else:
+    return seed_name
+
 def write(file_name, content, mode='wb'):
   with open(file_name, mode) as f:
     f.write(content)

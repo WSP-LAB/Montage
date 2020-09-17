@@ -9,9 +9,7 @@ from fuzz.resolve_pattern import regex
 from fuzz.resolve_pattern import string
 from utils.node import PROP_DICT
 from utils.node import TERM_TYPE
-# from fuzz.id_map import ID_HARNESS_MAP
-
-ID_HARNESS_MAP = {}
+from fuzz.id_map import ID_HARNESS_MAP
 
 class ResolveBug(Exception):
   def __init__(self, msg):

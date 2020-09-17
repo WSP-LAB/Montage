@@ -8,19 +8,14 @@ from utils import make_dir
 from utils.logger import print_msg
 
 class Parser:
-  def __init__(self, conf):
-    self._ast_dir = conf.ast_dir
-    self._seed_dir = os.path.join(conf.data_dir, 'seed')
-    make_dir(self._ast_dir)
-
-  def parse(self):
-    js_list = list_dir(self._seed_dir)
+  def parse(self, seed_dir, ast_dir):
+    js_list = list_dir(seed_dir)
     num_js = len(js_list)
     msg = 'Start parsing %d JS files' % (num_js)
     print_msg(msg, 'INFO')
 
     cmd = ['node', 'utils/parse.js']
-    cmd += [self._seed_dir, self._ast_dir]
+    cmd += [seed_dir, ast_dir]
     parser = Popen(cmd, cwd='./',
                    stdin=PIPE, stdout=PIPE, stderr=PIPE)
     parser.wait()

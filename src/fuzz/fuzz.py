@@ -10,8 +10,6 @@ import torch
 from torch.multiprocessing import Pool
 from torch.multiprocessing import set_start_method
 
-from fuzz.resolve import hoisting
-from fuzz.resolve import resolve_id
 from utils import data2tensor
 from utils import get_node_type
 from utils import hash_frag
@@ -21,6 +19,7 @@ from utils import is_node_list
 from utils import kill_proc
 from utils import load_pickle
 from utils import pool_map
+from utils import trim_seed_name
 from utils.harness import Harness
 from utils.logger import print_msg
 from utils.node import PROP_DICT
@@ -300,6 +299,9 @@ class Fuzzer:
 
   def resolve_errors(self, root, harness_list):
     try:
+      from fuzz.resolve import hoisting
+      from fuzz.resolve import resolve_id
+
       # ID Resolve
       symbols = hoisting(root, ([],[]), True)
       resolve_id(root, None, symbols, True,
@@ -388,9 +390,3 @@ def load_model(model_path):
 def run(proc_idx, conf):
   fuzzer = Fuzzer(proc_idx, conf)
   fuzzer.fuzz()
-
-def trim_seed_name(seed_name):
-  if '_aug.js' in seed_name:
-    return seed_name.replace('_aug.js', '.js')
-  else:
-    return seed_name

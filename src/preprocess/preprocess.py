@@ -18,14 +18,17 @@ class Preprocessor:
   def __init__(self, conf):
     self._pool = Pool(conf.num_proc, init_worker)
     self._conf = conf
+    self._ast_dir = conf.ast_dir
+    self._seed_dir = os.path.join(conf.data_dir, 'seed')
 
   def remove_js_with_errors(self):
     execute.main(self._pool, self._conf)
     triage.main(self._conf)
 
   def parse(self):
-    parser = Parser(self._conf)
-    parser.parse()
+    make_dir(self._ast_dir)
+    parser = Parser()
+    parser.parse(self._seed_dir, self._ast_dir)
 
   def strip_eval(self):
     strip.main(self._pool, self._conf)

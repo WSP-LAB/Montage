@@ -27,6 +27,9 @@ class Harness:
             self._harness_dict[js_name] = []
           self._harness_dict[js_name] += [harness]
 
+  def get_keys(self):
+    return self._harness_dict.keys()
+
   def get_harness(self, line):
     if line.startswith('load("'):
       delimiter = '"'

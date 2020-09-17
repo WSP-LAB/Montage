@@ -8,6 +8,10 @@ from preprocess.preprocess import Preprocessor
 from train.train import ModelTrainer
 from utils.config import Config
 from utils.logger import print_msg
+from utils.map import build_id_map
+
+def build_map(conf):
+  build_id_map(conf)
 
 def exec_fuzz(conf):
   fuzz(conf)
@@ -22,8 +26,8 @@ def exec_train(conf):
 
 def get_args():
   arg_parser = argparse.ArgumentParser()
-  arg_parser.add_argument('--opt', choices=['preprocess', 'train', 'fuzz'],
-  	  	                  required=True)
+  arg_parser.add_argument('--opt', required=True,
+                          choices=['preprocess', 'train', 'fuzz', 'build_map'])
   arg_parser.add_argument('--config', required=True)
   return arg_parser.parse_args(sys.argv[1:])
 
@@ -46,6 +50,8 @@ def main():
     exec_train(conf)
   elif args.opt == 'fuzz':
     exec_fuzz(conf)
+  elif args.opt == 'build_map':
+    build_map(conf)
 
 if __name__ == '__main__':
   main()
