@@ -3,24 +3,24 @@ import os
 import sys
 import torch
 
-from fuzz.fuzz import fuzz
-from preprocess.preprocess import Preprocessor
-from train.train import ModelTrainer
 from utils.config import Config
 from utils.logger import print_msg
-from utils.map import build_id_map
 
 def build_map(conf):
+  from utils.map import build_id_map
   build_id_map(conf)
 
 def exec_fuzz(conf):
+  from fuzz.fuzz import fuzz
   fuzz(conf)
 
 def exec_preprocess(conf):
-    preprocessor = Preprocessor(conf)
-    preprocessor.preprocess()
+  from preprocess.preprocess import Preprocessor
+  preprocessor = Preprocessor(conf)
+  preprocessor.preprocess()
 
 def exec_train(conf):
+  from train.train import ModelTrainer
   trainer = ModelTrainer(conf)
   trainer.train()
 

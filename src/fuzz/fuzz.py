@@ -10,6 +10,9 @@ import torch
 from torch.multiprocessing import Pool
 from torch.multiprocessing import set_start_method
 
+from fuzz.resolve import hoisting
+from fuzz.resolve import resolve_id
+from fuzz.resolve_bug import ResolveBug
 from utils import data2tensor
 from utils import get_node_type
 from utils import hash_frag
@@ -299,14 +302,11 @@ class Fuzzer:
 
   def resolve_errors(self, root, harness_list):
     try:
-      from fuzz.resolve import hoisting
-      from fuzz.resolve import resolve_id
-
       # ID Resolve
       symbols = hoisting(root, ([],[]), True)
       resolve_id(root, None, symbols, True,
                  cand=[], hlist=harness_list)
-    except Exception as error:
+    except ResolveBug as error:
       msg = 'Resolve Failed: {}'.format(error)
       print_msg(msg, 'WARN')
 

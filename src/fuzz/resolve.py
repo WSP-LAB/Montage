@@ -7,13 +7,10 @@ from fuzz.resolve_pattern import function
 from fuzz.resolve_pattern import obj
 from fuzz.resolve_pattern import regex
 from fuzz.resolve_pattern import string
+from fuzz.id_map import ID_HARNESS_MAP
+from fuzz.resolve_bug import error
 from utils.node import PROP_DICT
 from utils.node import TERM_TYPE
-from fuzz.id_map import ID_HARNESS_MAP
-
-class ResolveBug(Exception):
-  def __init__(self, msg):
-    Exception.__init__(self, msg)
 
 class JSType(Enum):
   unknown = 0
@@ -557,8 +554,6 @@ def get_cand(af, bf):
     ret.append(tmp)
   return ret
 
-def error(msg):
-  raise ResolveBug(msg)
 
 def get_type_newExpr(expr):
   if 'name' in expr['callee']:
