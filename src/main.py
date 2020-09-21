@@ -11,6 +11,11 @@ def build_map(conf):
   build_id_map(conf)
 
 def exec_fuzz(conf):
+  if not os.path.exists('fuzz/id_map.py'):
+    print_msg('Please build a map for identifiers predefined in the harness files first.',
+              'ERROR')
+    sys.exit(1)
+
   from fuzz.fuzz import fuzz
   fuzz(conf)
 
