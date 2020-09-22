@@ -7,10 +7,9 @@ the JS tests that previously triggered JS engine bugs. Thus, Montage aims to
 mutate a seed AST such that the resulting AST reflects the commonalities of the
 trained JS tests. The key intuition behind our approach is that a JS code
 similar to the previous bug-triggering JS code may trigger another bug. For more
-details, please refer to our
-[paper](https://leeswimming.com/papers/lee-sec20.pdf), "Montage: A Neural
-Network Language Model-Guided JavaScript Engine Fuzzer", which appeared in
-USENIX Security 2020.
+details, please refer to our [paper](https://leeswimming.com/papers/lee-sec20.pdf),
+"Montage: A Neural Network Language Model-Guided JavaScript Engine Fuzzer",
+which appeared in USENIX Security 2020.
 
 ## Installation
 Montage works on a machine running Linux with NVIDIA graphic cards. It is tested
@@ -37,9 +36,8 @@ We provide dataset used in our experiments (Sec. 7.2-7.5) in this
 ## Usage
 
 ### Configuration file
-Please refer to this
-[link](https://github.com/WSP-LAB/Montage/blob/master/conf/README.md) for
-writing a configuration file.
+Please refer to this [link](https://github.com/WSP-LAB/Montage/blob/master/conf/README.md)
+for writing a configuration file.
 
 ### Phase I
 
@@ -80,7 +78,7 @@ and [SoftSec Lab](https://softsec.kaist.ac.kr) at KAIST.
 
 ## Citation
 To cite our paper:
-```
+```bibtex
 @INPROCEEDINGS{lee:usenixsec:2020,
   author = {Suyoung Lee and HyungSeok Han and Sang Kil Cha and Sooel Son},
   title = {{Montage}: A Neural Network Language Model-Guided {JavaScript} Engine Fuzzer},
