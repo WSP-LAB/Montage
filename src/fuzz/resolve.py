@@ -1,105 +1,18 @@
 import random
 
-from enum import Enum
-
-from fuzz.resolve_pattern import array
-from fuzz.resolve_pattern import function
-from fuzz.resolve_pattern import obj
-from fuzz.resolve_pattern import regex
-from fuzz.resolve_pattern import string
+from fuzz.builtin import BuiltIn
 from fuzz.id_map import ID_HARNESS_MAP
 from fuzz.resolve_bug import error
+from fuzz.symbol import JSType
+from fuzz.symbol import Symbol
 from utils.node import PROP_DICT
 from utils.node import TERM_TYPE
 
-class JSType(Enum):
-  unknown = 0
-  undefined = 1
-  js_bool = 2
-  js_null = 3
-  js_number = 4
-  js_string = 5
-  js_regex = 6
-  js_array = 7
-  js_object = 8
-  js_func = 9
+builtin = BuiltIn()
 
-class Symbol:
-  def __init__(self, identifier, expr, ty = None):
-    if 'type' in identifier and  identifier['type'] == 'Identifier':
-      self.symbol = identifier['name']
-    else:
-      self.symbol = identifier
-    if type(self.symbol) not in [str, bytes]:
-      error('self.symbol is not string')
-    if ty == None : self.ty = to_jstype(expr)
-    else : self.ty = ty
-    self.expr = expr
-    self.flag = True
-
-  def update_type(self, ty):
-    self.ty = ty
-
-  def get_type(self):
-    return self.ty
-
-  def set_flag(self, flag):
-    self.flag = flag
-
-  def get_flag(self):
-    return self.flag
-
-  def __str__(self):
-    ret = '%s : %s'%(self.symbol, self.ty)
-    return ret
-
-BUILTIN_OBJS = ['Object', 'Function', 'Boolean', 'Symbol', 'Error', 'EvalError',
-'InternalError', 'RangeError', 'ReferenceError', 'SyntaxError', 'TypeError',
-'URIError', 'Number', 'Math', 'Date', 'String', 'RegExp', 'Map', 'Set',
-'WeakMap', 'WeakSet', 'ArrayBuffer', 'SharedArrayBuffer', 'Atomics', 'DataView',
-'JSON', 'Promise', 'Reflect', 'Proxy', 'Intl', 'WebAssembly', 'WScript',
-'__defineGetter__', '__defineSetter__']
-NOT_IN_CHAKRA = ['InternalError', 'SharedArrayBuffer', 'Atomics', 'uneval',
-'Intl', 'WebAssembly'] # Old Version
-
-BUILTIN_FUNCS = ['eval', 'uneval', 'isFinite', 'isNaN', 'parseFloat',
-'parseInt', 'decodeURI', 'decodeURIComponent', 'encodeURI',
-'encodeURIComponent', 'escape', 'unescape']
-
-BUILTIN_OBJS = [x for x in BUILTIN_OBJS if x not in NOT_IN_CHAKRA]
-BUILTIN_FUNCS = [x for x in BUILTIN_FUNCS if x not in NOT_IN_CHAKRA]
-
-BUILTIN_ARRAYS = [ 'Array', 'Int8Array', 'Uint8Array', 'Uint8ClampedArray',
-'Int16Array', 'Uint16Array', 'Int32Array', 'Uint32Array', 'Float32Array',
-'Float64Array']
-BUILTINS = {
-  'Infinity' : JSType.js_number, 'NaN' : JSType.js_number,
-  'undefined' : JSType.undefined, 'null' : JSType.js_null,
-}
-
-for x in BUILTIN_OBJS + BUILTIN_ARRAYS:
-  BUILTINS[x] = JSType.js_object
-for x in BUILTIN_FUNCS :
-  BUILTINS[x] = JSType.js_func
-
-BUILTINS_SYMS = []
-for sym, ty in BUILTINS.items():
-  BUILTINS_SYMS.append(Symbol(sym, None, ty))
-
-def get_resolve_pattern():
-  black = {}
-  for x in obj.split('\n'):
-    if x != '': black[x] = True
-  ret = {}
-  for data, ty in [(array, JSType.js_array), (function, JSType.js_func), (obj,
-    JSType.js_object), (string, JSType.js_string), (regex, JSType.js_regex)]:
-    for x in data.split('\n'):
-      if x != '' and x not in black:
-        if x not in ret: ret[x] = []
-        ret[x].append(ty)
-  return ret
-
-RESOLVE_PATTERN = get_resolve_pattern()
+def update_builtins(eng_path):
+  builtin.update_builtins(eng_path)
+  builtin.build_resolve_pattern(eng_path)
 
 def init_symbols():
   return [], []
@@ -252,12 +165,12 @@ def resolve_list(nodes, parent, symbols, is_global, is_check, cand, hlist):
 
 def resolve_identifier(node, parent, symbols, is_global, is_check, cand, hlist):
   name = node['name']
-  if name in ID_HARNESS_MAP and name not in BUILTINS:
+  if name in ID_HARNESS_MAP and name not in builtin.BUILTINS:
     if not is_duplicate(hlist, name):
       fname = pick_one(ID_HARNESS_MAP[name])
       hlist.append(fname)
     return symbols
-  if name in BUILTINS:
+  if name in builtin.BUILTINS:
     return symbols
   if find_symbol(node, symbols) == None :
     types = infer_id_types(node, parent)
@@ -283,8 +196,8 @@ def resolve_FuncCall(node, parent, symbols, is_global, is_check, cand, hlist):
         fname = pick_one(ID_HARNESS_MAP[name])
         hlist.append(fname)
       expr = None
-    elif name in BUILTIN_FUNCS or name in BUILTIN_OBJS or \
-      name in BUILTIN_ARRAYS:
+    elif name in builtin.FUNCS or name in builtin.OBJS or \
+      name in builtin.ARRAYS:
       expr = None
     else:
       symbol = find_symbol(node['callee'], symbols)
@@ -466,19 +379,12 @@ def resolve_Try(node, parent, symbols, is_global, is_check, cand, hlist):
     ret = merge_symbols(ret, (g1,l1[:length]))
   return symbols
 
-def to_jstype(expr):
-  if expr['type'] == 'VariableDeclarator':
-    return JSType.undefined
-  elif expr['type'] == 'FunctionDeclaration':
-    return JSType.js_func
-  return JSType.unknown
-
 def infer_id_types(node, parent):
   if parent['type'] == 'MemberExpression':
     if parent['property']['type'] == 'Identifier':
       name = parent['property']['name']
-      if name in RESOLVE_PATTERN:
-        return RESOLVE_PATTERN[name]
+      if name in builtin.resolve_pattern:
+        return builtin.resolve_pattern[name]
     return [JSType.js_object]
   return [JSType.unknown]
 
@@ -506,7 +412,7 @@ def pick_one(cand):
 
 def change_id(node, types, symbols, cand0):
   for tys in [types, [JSType.js_object]]:
-    for syms in [cand0, symbols, (BUILTINS_SYMS, [])]:
+    for syms in [cand0, symbols, (builtin.SYMS, [])]:
       if len(syms) == 0 : continue
       cand = find_cand(tys, syms)
       if len(cand) > 0:
@@ -554,11 +460,10 @@ def get_cand(af, bf):
     ret.append(tmp)
   return ret
 
-
 def get_type_newExpr(expr):
   if 'name' in expr['callee']:
     ty = expr['callee']['name']
-    if ty in BUILTIN_ARRAYS:
+    if ty in builtin.ARRAYS:
       return JSType.js_array
   return JSType.js_object
 

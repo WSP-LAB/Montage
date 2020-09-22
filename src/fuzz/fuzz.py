@@ -12,6 +12,7 @@ from torch.multiprocessing import set_start_method
 
 from fuzz.resolve import hoisting
 from fuzz.resolve import resolve_id
+from fuzz.resolve import update_builtins
 from fuzz.resolve_bug import ResolveBug
 from utils import data2tensor
 from utils import get_node_type
@@ -61,6 +62,7 @@ class Fuzzer:
      self._type_dict) = data
 
     self.assign_gpu(proc_idx)
+    update_builtins(conf.eng_path)
 
   def append_frag(self, cand_list, valid_type, root, stack):
     # Try all fragments in top k
