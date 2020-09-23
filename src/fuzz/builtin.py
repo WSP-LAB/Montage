@@ -76,7 +76,6 @@ BUILTIN_OBJS = [
   '__defineSetter__',
 ]
 
-
 class BuiltIn:
   def __init__(self):
     self.ARRAYS  = BUILTIN_ARRAYS
@@ -97,7 +96,6 @@ class BuiltIn:
 
     regex_props = exec_eng(eng_path, 'fuzz/regex_getter.js')
     self.regex_props = self.process_out(regex_props)
-    self.regex_props = [x for x in self.regex_props if not x.startswith('$')]
 
     str_props = exec_eng(eng_path, 'fuzz/str_getter.js')
     self.str_props = self.process_out(str_props)
@@ -120,6 +118,7 @@ class BuiltIn:
   def process_out(self, stdout):
     stdout = stdout.decode('utf-8')
     stdout = stdout.split()
+    stdout = list(set(stdout))
     return stdout
 
   def update_builtins(self, eng_path):
