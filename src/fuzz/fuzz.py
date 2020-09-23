@@ -253,10 +253,10 @@ class Fuzzer:
 
   def postprocess(self, root, harness_list):
     # Insert Load
-    body = [get_define_node()]
+    body = [get_define_node(self._seed_dir)]
 
     for jspath in harness_list:
-      load_node = get_load_node(self._seed_dir, jspath)
+      load_node = get_load_node(jspath)
       if load_node not in body:
         body.append(load_node)
 

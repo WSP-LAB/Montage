@@ -107,7 +107,7 @@ TERM_TYPE = [
   'Import',
 ]
 
-def get_define_node():
+def get_define_node(seed_dir):
   node = {
     'type': 'IfStatement',
     'test': {
@@ -138,16 +138,64 @@ def get_define_node():
           'name': 'load'
         },
         'right': {
-          'type': 'MemberExpression',
-          'computed': False,
-          'object': {
-            'type': 'Identifier',
-            'name': 'WScript'
+          'type': 'FunctionExpression',
+          'id': None,
+          'params':[
+            {
+              'type': 'Identifier',
+              'name': 'js_path'
+            }
+          ],
+          'body': {
+            'type': 'BlockStatement',
+            'body': [
+              {
+                'type': 'ExpressionStatement',
+                'expression': {
+                  'type': 'CallExpression',
+                  'callee': {
+                    'type': 'MemberExpression',
+                    'computed': False,
+                    'object': {
+                      'type': 'Identifier',
+                      'name': 'WScript'
+                    },
+                    'property': {
+                      'type': 'Identifier',
+                      'name': 'LoadScriptFile'
+                    }
+                  },
+                  'arguments': [
+                    {
+                      'type': 'CallExpression',
+                      'callee': {
+                        'type': 'MemberExpression',
+                        'computed': False,
+                        'object': {
+                          'type': 'Literal',
+                          'value': seed_dir + '/',
+                          'raw': '"' + seed_dir + '/"'
+                        },
+                        'property': {
+                          'type': 'Identifier',
+                          'name': 'concat'
+                        }
+                      },
+                      'arguments': [
+                        {
+                          'type': 'Identifier',
+                          'name': 'js_path'
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
           },
-          'property': {
-            'type': 'Identifier',
-            'name': 'LoadScriptFile'
-          }
+          'generator': False,
+          'expression': False,
+          'async': False
         }
       }
     },
@@ -155,8 +203,7 @@ def get_define_node():
   }
   return node
 
-def get_load_node(seed_dir, script_path):
-  abs_path = os.path.join(seed_dir, script_path)
+def get_load_node(script_path):
   node = {
     'type': 'ExpressionStatement',
     'expression': {
@@ -168,8 +215,8 @@ def get_load_node(seed_dir, script_path):
       'arguments': [
         {
           'type': 'Literal',
-          'value': abs_path,
-          'raw': '"' + abs_path + '"'
+          'value': script_path,
+          'raw': '"' + script_path + '"'
         }
       ]
     }
