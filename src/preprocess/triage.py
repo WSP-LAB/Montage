@@ -8,7 +8,7 @@ from utils import read
 ERROR = '============== STDERR ==============='
 
 def chakra(log_path):
-  log = read(log_path, 'r')
+  log = read(log_path, 'r', encoding='ISO-8859-1')
   error = get_err_msg(log)
 
   if ('SyntaxError:' in error or
@@ -17,6 +17,49 @@ def chakra(log_path):
       'RangeError:' in error or
       'URIError:' in error or
       'Error in opening file:' in error):
+    return 1
+  else:
+    return get_ret(log)
+
+def jsc(log_path):
+  log = read(log_path, 'r', encoding='ISO-8859-1')
+  error = get_err_msg(log, read_err=False)
+
+  if ('Exception: SyntaxError:' in error or
+      'Exception: ReferenceError:' in error or
+      'Exception: TypeError:' in error or
+      'Exception: RangeError:' in error or
+      'Exception: URIError:' in error or
+      'Could not open file:' in error):
+    return 1
+  else:
+    return get_ret(log)
+
+def moz(log_path):
+  log = read(log_path, 'r', encoding='ISO-8859-1')
+  error = get_err_msg(log)
+
+  if ('SyntaxError: ' in error or
+      'ReferenceError: ' in error or
+      'TypeError: ' in error or
+      'RangeError: ' in error or
+      'URIError: ' in error or
+      'Error: can\'t open ' in error):
+    return 1
+  else:
+    return get_ret(log)
+
+def v8(log_path):
+  log = read(log_path, 'r', encoding='ISO-8859-1')
+  error = get_err_msg(log, read_err=False)
+
+  if ('\nSyntaxError:' in error or
+      '\nReferenceError:' in error or
+      '\nTypeError:' in error or
+      '\nRangeError:' in error or
+      '\nURIError:' in error or
+      'Error loading file' in error or
+      'Error executing file' in error):
     return 1
   else:
     return get_ret(log)
@@ -30,6 +73,12 @@ def get_err_msg(log, read_err=True):
 def get_func(eng_name):
   if eng_name == 'chakra':
     return chakra
+  elif eng_name == 'v8':
+    return v8
+  elif eng_name == 'moz':
+    return moz
+  elif eng_name == 'jsc':
+    return jsc
 
 def get_ret(log):
   ret = log.split('MONTAGE_RETURN: ')

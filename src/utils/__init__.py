@@ -107,8 +107,8 @@ def random_string(length):
   rand_str = [choice(candidate) for i in range(length)]
   return ''.join(rand_str)
 
-def read(file_name, mode='rb'):
-  with open(file_name, mode) as f:
+def read(file_name, mode='rb', encoding=None):
+  with open(file_name, mode, encoding=encoding) as f:
     return f.read()
 
 def store_pickle(dpath, data):

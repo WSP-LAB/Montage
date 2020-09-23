@@ -2,7 +2,7 @@
  sample configuration files.
  - `bug_dir`: ABSPATH for saving found bugs.
  - `data_dir`: ABSPATH for saving preprocessed data.
- - `eng_name`: Target JS engine ("chakra").
+ - `eng_name`: Target JS engine ("chakra", "v8", "moz", "jsc").
  - `eng_path`: ABSPATH to the JS engine.
  - `max_ins`: The maximum number of fragments to append.
  - `model_path`: The path to the saved model to use for fuzzing.

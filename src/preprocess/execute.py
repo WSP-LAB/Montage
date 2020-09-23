@@ -48,7 +48,7 @@ class Executor:
     log += b'\nMONTAGE_RETURN: %d' % (ret)
     write(log_path, log)
 
-def exec_chakra(js_path, conf):
+def exec_eng(js_path, conf):
   tmp_js_path = rewrite_file(js_path, conf.data_dir)
 
   executor = Executor(conf)
@@ -70,14 +70,11 @@ def main(pool, conf):
   msg = 'Start executing %d JS files' % (num_js)
   print_msg(msg, 'INFO')
 
-  if conf.eng_name == 'chakra':
-    exec_func = exec_chakra
-
-  pool_map(pool, exec_func, js_list, conf=conf)
+  pool_map(pool, exec_eng, js_list, conf=conf)
 
 def rewrite_file(js_path, tmp_dir):
   dir_path = os.path.dirname(js_path)
-  PREFIX = b'load = function(js_path){WScript.LoadScriptFile(\'%s/\'.concat(js_path));}'
+  PREFIX = b'if(typeof load == \'undefined\') load = function(js_path){WScript.LoadScriptFile(\'%s/\'.concat(js_path));}'
   PREFIX = PREFIX % dir_path.encode('utf-8')
 
   code = read(js_path)

@@ -17,9 +17,9 @@ on a machine running Ubuntu 20.04 with GTX Titan XP GPUs. Python 3.8 and PyTorch
 1.4.0 with CUDA are required to run Montage. Please refer to (1) this
 [link](https://pytorch.org/get-started/previous-versions/) for installing
 PyTorch and (2) this [link](https://developer.nvidia.com/cuda-toolkit-archive)
-for installing CUDA Toolkits. We currently support ChakraCore only and have a
-plan to support V8, SpiderMonkey, and JavaScriptCore shortly. To get ready for
-running Montage, please additionally run the following commands:
+for installing CUDA Toolkits. We currently support ChakraCore, V8, SpiderMonkey,
+and JavaScriptCore. To get ready for running Montage, please additionally run
+the following commands:
 ```
 $ sudo apt update
 $ sudo apt install nodejs npm
