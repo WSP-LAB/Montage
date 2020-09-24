@@ -74,7 +74,7 @@ def main(pool, conf):
 
 def rewrite_file(js_path, tmp_dir):
   dir_path = os.path.dirname(js_path)
-  PREFIX = b'if(typeof load == \'undefined\') load = function(js_path){WScript.LoadScriptFile(\'%s/\'.concat(js_path));}'
+  PREFIX = b'if(typeof load == \'undefined\') load = function(js_path){WScript.LoadScriptFile(\'%s/\'.concat(js_path));};'
   PREFIX = PREFIX % dir_path.encode('utf-8')
 
   code = read(js_path)
