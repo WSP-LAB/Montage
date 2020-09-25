@@ -85,19 +85,19 @@ class BuiltIn:
     self.SYMS = []
 
   def get_props(self, eng_path):
-    array_props = exec_eng(eng_path, 'fuzz/array_getter.js')
+    array_props = exec_eng(eng_path, 'utils/array_getter.js')
     self.array_props = self.process_out(array_props)
 
-    func_props = exec_eng(eng_path, 'fuzz/func_getter.js')
+    func_props = exec_eng(eng_path, 'utils/func_getter.js')
     self.func_props = self.process_out(func_props)
 
-    obj_props = exec_eng(eng_path, 'fuzz/obj_getter.js')
+    obj_props = exec_eng(eng_path, 'utils/obj_getter.js')
     self.obj_props = self.process_out(obj_props)
 
-    regex_props = exec_eng(eng_path, 'fuzz/regex_getter.js')
+    regex_props = exec_eng(eng_path, 'utils/regex_getter.js')
     self.regex_props = self.process_out(regex_props)
 
-    str_props = exec_eng(eng_path, 'fuzz/str_getter.js')
+    str_props = exec_eng(eng_path, 'utils/str_getter.js')
     self.str_props = self.process_out(str_props)
 
   def build_resolve_pattern(self, eng_path):
@@ -122,7 +122,7 @@ class BuiltIn:
     return stdout
 
   def update_builtins(self, eng_path):
-    globs = exec_eng(eng_path, 'fuzz/global_getter.js')
+    globs = exec_eng(eng_path, 'utils/global_getter.js')
     globs = self.process_out(globs)
     self.OBJS = [x for x in self.OBJS if x in globs]
     self.FUNCS = [x for x in self.FUNCS if x in globs]
