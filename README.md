@@ -59,8 +59,8 @@ $ python3 main.py --opt train --config CONFIG_PATH
 #### Caveat
 We re-engineered Montage so that a single graphic card could be enough for
 training the model. However, if you see an error message saying `RuntimeError:
-CUDA out of memory`, you need carefully adjust the configuration file such that
-it fits the memory size of your graphic card.
+CUDA out of memory`, you need to carefully adjust the configuration file such
+that it fits the memory size of your graphic card.
 
 ### Phase III
 Phase III produces new JS tests by leveraging the trained LSTM model and logs
